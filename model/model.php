@@ -2,6 +2,8 @@
 
 class Model
 {
+    // Au moment de l'instanciation, on va se connecter à la BDD grace aux infos stocké dans $user, $database et dans $password.
+    // On en profite égélament pour enregistrer dans $table, le nom de la table a interroger et dans $pdo notre connexion à la BDD.
     public $pdo;
     public $table;
     public $attributes = [];
@@ -16,6 +18,8 @@ class Model
         $this->table = $table;
     }
 
+    // __set et __get dont des méthodes magiques qui permettent de récupérer les infos liées à l'affectation ou à l'utilisation de variables n'existant pas ou crées à la volée (prénom, nom, phone)
+    // pusique ces variables n'existent pas, on les stocke dans $attributes qui est un array
     public function __set($key, $value)
     {
         $this->attributes[$key] = $value;
@@ -26,7 +30,9 @@ class Model
     }
     public function save()
     {
-        if($this->is_new){
+        if($this->is_new){  // si new est TRUE alors on enregistre un contact, sinon on modife un contact existant
+            // La requête INSERT INTO, va récupérer toutes les variables crées à la volée et stockées dans la variable $attributes, pour en faire un requpete dynamiques.
+            // Pour que cela fonctionne il faut absolument que les names des champs du formalaire correspondent aux names des champs dans la BDD
             $query = 'INSERT INTO '
             . $this->table
             . ' ('
